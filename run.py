@@ -1,3 +1,8 @@
+import sys
+
+sys.path.append('ares-sc2/src/ares')
+sys.path.append('ares-sc2/src')
+sys.path.append('ares-sc2')
 import argparse
 import asyncio
 import logging
@@ -42,10 +47,10 @@ def run_ladder_game(args, bot):
     # Ensure replay directory exists
     if REPLAY_SAVE_PATH and not os.path.exists(REPLAY_SAVE_PATH):
         os.makedirs(REPLAY_SAVE_PATH, exist_ok=True)
-    
+
     # Run the game
     result = asyncio.get_event_loop().run_until_complete(g)
-    
+
     # Save replay if we have a path and a result
     if result and REPLAY_SAVE_PATH:
         replay_path = os.path.join(REPLAY_SAVE_PATH, f"{BOT_NAME}_vs_{args.OpponentId}.SC2Replay")
@@ -54,7 +59,7 @@ def run_ladder_game(args, bot):
             print(f"Replay saved to: {replay_path}")
         except Exception as e:
             print(f"Failed to save replay: {e}")
-    
+
     return result, args.OpponentId
 
 
@@ -91,19 +96,19 @@ def parse_arguments():
 
     # Bot settings
     parser.add_argument("--bot-name", type=str, default=BOT_NAME,
-                       help=f"Name of your bot. Default: {BOT_NAME}")
+                        help=f"Name of your bot. Default: {BOT_NAME}")
     parser.add_argument("--bot-race", type=str, default=BOT_RACE,
-                       help=f"Bot race (Terran, Zerg, Protoss, Random). Default: {BOT_RACE}")
-    
+                        help=f"Bot race (Terran, Zerg, Protoss, Random). Default: {BOT_RACE}")
+
     # Game settings
     parser.add_argument("--map", type=str, default=None,
-                       help=f"Map to play on. If not specified, a random map will be selected from: {', '.join(MAP_POOL)}")
+                        help=f"Map to play on. If not specified, a random map will be selected from: {', '.join(MAP_POOL)}")
     parser.add_argument("--opponent-race", type=str, default=OPPONENT_RACE,
-                       help=f"Computer race (Terran, Zerg, Protoss, Random). Default: {OPPONENT_RACE}")
+                        help=f"Computer race (Terran, Zerg, Protoss, Random). Default: {OPPONENT_RACE}")
     parser.add_argument("--difficulty", type=str, default=OPPONENT_DIFFICULTY,
-                       help=f"Computer difficulty (VeryEasy to VeryHard). Default: {OPPONENT_DIFFICULTY}")
+                        help=f"Computer difficulty (VeryEasy to VeryHard). Default: {OPPONENT_DIFFICULTY}")
     parser.add_argument("--realtime", action='store_true', default=REALTIME,
-                       help=f"Play in realtime. Default: {REALTIME}")
+                        help=f"Play in realtime. Default: {REALTIME}")
     parser.add_argument("--sc2-version", type=str, help="Starcraft 2 game version (optional)")
 
     args, unknown_args = parser.parse_known_args()
@@ -144,22 +149,22 @@ def main():
     """Main function to run the bot."""
     # Parse command line arguments
     args = parse_arguments()
-    
+
     # Simple console logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(message)s",
     )
-    
+
     # Get bot name and race from args (with fallback to config)
     bot_name = getattr(args, 'bot_name', BOT_NAME)
     bot_race = getattr(args, 'bot_race', BOT_RACE)
-    
+
     print(f"===== {bot_name} ({bot_race}) =====")
     print(f"Available maps: {', '.join(MAP_POOL)}")
     print(f"Opponent: {args.opponent_race} {args.difficulty}")
     print(f"Realtime: {'Yes' if args.realtime else 'No'}")
-    
+
     try:
         # Load and run the bot
         bot = load_bot(args)
@@ -184,7 +189,7 @@ def main():
             try:
                 print(f"Loading map from custom path: {MAP_PATH}")
                 # Use the map_dir parameter directly with the full Maps path
-                map_obj = sc2.maps.get(map_name, map_dir=MAP_PATH)
+                map_obj = sc2.maps.get(map_name)
             except Exception as e:
                 print(f"Error loading custom map: {e}")
                 print("Falling back to default SC2 maps...")
@@ -210,6 +215,8 @@ def main():
         return 1
     return 0
 
+
 if __name__ == "__main__":
     import sys
+
     sys.exit(main())
