@@ -15,14 +15,14 @@ MAP_PATH = "/Applications/StarCraft II/Maps"
 
 # List of maps to play on (randomly selected if not specified)
 MAP_POOL = [
+    # "Flat128",
     "Simple128",
-    "Simple96",
-    "Simple64"
+    # "Flat32"
 ]
 
 # ===== OPPONENT SETTINGS =====
 # Computer opponent settings (for local games)
-OPPONENT_RACE = "Random"  # Terran, Zerg, Protoss, Random
+OPPONENT_RACE = "Zerg"  # Terran, Zerg, Protoss, Random
 OPPONENT_DIFFICULTY = "Medium"  # VeryEasy, Easy, Medium, Hard, VeryHard, etc.
 
 # ===== GAME MODE =====
